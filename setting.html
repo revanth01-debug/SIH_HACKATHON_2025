@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings - CivicTrack</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(to right, #e0f7fa, #f1f8ff);
+      color: #222;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+    }
+
+    .container {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+      padding: 40px 32px;
+      max-width: 600px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 28px;
+      color: #1e88e5;
+    }
+
+    h3 {
+      margin-bottom: 20px;
+      font-size: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus {
+      border-color: #1e88e5;
+      outline: none;
+    }
+
+    .save-btn {
+      background: #1e88e5;
+      color: #fff;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .save-btn:hover {
+      background: #1565c0;
+    }
+
+    .option-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    .option-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid #eee;
+      font-size: 1.05rem;
+    }
+
+    .option-list li:last-child {
+      border-bottom: none;
+    }
+
+    .option-list button {
+      background: #e3f2fd;
+      color: #1e88e5;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .option-list button:hover {
+      background: #bbdefb;
+    }
+
+    .danger-btn {
+      background: #e53935;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .danger-btn:hover {
+      background: #b71c1c;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>⚙️ CivicTrack Settings</h2>
+
+    <div class="settings-section">
+      <h3>Edit Profile</h3>
+      <form id="editProfileForm">
+        <label for="username">Name</label>
+        <input type="text" id="username" required />
+
+        <label for="email">Email</label>
+        <input type="email" id="email" required />
+
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" required />
+
+        <button type="submit" class="save-btn">💾 Save Changes</button>
+      </form>
+    </div>
+
+    <div class="settings-section">
+      <h3>Other Options</h3>
+      <ul class="option-list">
+        <li>
+          <span>🔐 Change Password</span>
+          <button onclick="location.href='changepassword.html'">Change</button>
+        </li>
+        <li>
+          <span>🔔 Notification Preferences</span>
+          <button onclick="location.href='changepassword.html'">Edit</button>
+        </li>
+        <li>
+          <span>🗑️ Delete Account</span>
+          <button class="danger-btn" onclick="confirmDelete()">Delete</button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Load user profile
+    const userProfileStr = localStorage.getItem('loggedInUser');
+    if (userProfileStr) {
+      const user = JSON.parse(userProfileStr);
+      document.getElementById('username').value = user.username || '';
+      document.getElementById('email').value = user.email || '';
+      document.getElementById('phone').value = user.phone || '';
+    }
+
+    // Save profile changes
+    document.getElementById('editProfileForm').onsubmit = function(e) {
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      let user = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+      user.username = username;
+      user.email = email;
+      user.phone = phone;
+      localStorage.setItem('loggedInUser', JSON.stringify(user));
+      localStorage.setItem('userProfile', JSON.stringify(user));
+      alert('✅ Profile updated!');
+    };
+
+    function confirmDelete() {
+      const confirmed = confirm("⚠️ Do you want to delete your account?");
+      if (confirmed) {
+        alert("❌ Your account has been deleted.");
+        // Redirect or call backend API here
+        // Example: window.location.href = "account-deleted.html";
+      }
+    }
+  </script>
+</body>
+</html>
