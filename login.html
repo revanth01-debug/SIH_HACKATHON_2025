@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CivicTrack - Login</title>
+  <style>
+    * {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(28, 32, 7);
+  color: #fff;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.home-btn {
+  text-decoration: none;
+  background: none;
+  border: 2px solid #4caf50;
+  color: #4caf50;
+  padding: 5px 15px;
+  border-radius: 20px;
+  transition: 0.3s ease;
+}
+
+.home-btn:hover {
+  background-color: #4caf50;
+  color: black;
+}
+
+.form-box {
+  border: 1px solid #444;
+  border-radius: 10px;
+  padding: 25px;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 500;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background-color: #1e1e1e;
+  color: white;
+}
+
+input:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+
+a {
+  color: #4fc3f7;
+  text-decoration: none;
+}
+
+.green-outline-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #4caf50;
+  background: none;
+  color: #4caf50;
+  border-radius: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.green-outline-btn:hover {
+  background-color: #4caf50;
+  color: black;
+}
+.green-outline-btn:focus {
+  outline: none;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="brand">CivicTrack</span>
+      <a href="index.html" class="home-btn">Home</a>
+    </div>
+
+    <div class="form-box">
+      <h2>User Login Page</h2>
+      <label>E mail</label>
+  <input type="text" id="loginEmail" placeholder="Email" required />
+
+      <label>Password</label>
+      <input type="password" id="loginPassword" placeholder="Enter password" required />
+
+      <p>Don't have an account? <a href="register.html">Register here</a></p>
+      <button class="green-outline-btn" id="loginBtn">Login</button>
+    </div>
+  </div>
+  
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function(e) {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value;
+
+      // Get stored user profile from localStorage
+      const userProfileStr = localStorage.getItem("userProfile");
+      let userProfile = null;
+      if (userProfileStr) {
+        userProfile = JSON.parse(userProfileStr);
+      }
+
+      if (userProfile && email === userProfile.email && password === userProfile.password) {
+        // Set logged in user info for later use
+        localStorage.setItem("loggedInUser", JSON.stringify(userProfile));
+        alert("Login successful!");
+        window.location.href = "index.html";
+      } else {
+        alert("Incorrect email or password. Please try again.");
+      }
+    });
+let map = L.map("map").setView([20, 0], 2); // default view
+
+// Add OpenStreetMap tiles
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution:
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+}).addTo(map);
+
+
+// Add marker for user location
+let userMarker;
+
+// Try to get GPS location
+
+  </script>
+</body>
+</html>
