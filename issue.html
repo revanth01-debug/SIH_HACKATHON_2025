@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report New Issue</title>
+  
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+  />
+  <style>
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(120deg, #6a5acd 0%, #8ec5fc 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .report-form {
+      max-width: 480px;
+      margin: 48px auto;
+      background: #fff;
+      padding: 36px 32px 28px 32px;
+      border-radius: 22px;
+      box-shadow: 0 8px 32px rgba(106,90,205,0.18);
+      border-top: 6px solid #6a5acd;
+      position: relative;
+      z-index: 2;
+    }
+
+    .report-form h2 {
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 2rem;
+      color: #6a5acd;
+      letter-spacing: 1px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #6a5acd, #8ec5fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    form label {
+      display: block;
+      margin-top: 18px;
+      font-weight: 600;
+      color: #483d8b;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="file"] {
+      background: #f6f8ff;
+      border: 1.5px dashed #b3b3e6;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 8px;
+      transition: border 0.2s;
+    }
+    input[type="file"]:hover {
+      border: 1.5px solid #6a5acd;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      margin-top: 8px;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1.5px solid #e0e0f0;
+      font-size: 1rem;
+      background: #f6f8ff;
+      transition: border 0.2s;
+    }
+    input[type="text"]:focus,
+    select:focus,
+    textarea:focus {
+      border: 1.5px solid #6a5acd;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .checkbox {
+      display: flex;
+      align-items: center;
+      margin-top: 18px;
+    }
+    .checkbox input {
+      margin-right: 10px;
+      accent-color: #6a5acd;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 14px;
+      background: linear-gradient(90deg, #6a5acd, #8ec5fc);
+      color: #fff;
+      border: none;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px rgba(106,90,205,0.10);
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(90deg, #8ec5fc, #6a5acd);
+      box-shadow: 0 4px 16px rgba(106,90,205,0.18);
+    }
+
+    #map {
+      height: 260px;
+      width: 100%;
+      margin-top: 16px;
+      border-radius: 14px;
+      box-shadow: 0 2px 12px rgba(106,90,205,0.08);
+      border: 1.5px solid #e0e0f0;
+    }
+
+  </style>
+</head>
+<body>
+  <section class="report-form">
+    <h2>📝 Report New Issue</h2>
+
+    <form id="issueForm">
+      <!-- Upload -->
+      <label for="photo">Add/Upload Photo</label>
+      <input type="file" id="photo" accept="image/*" multiple />
+
+      <!-- Map -->
+      <div id="map" style="height: 400px; width: 100%; border-radius: 12px; margin: 20px 0;"></div>
+      <input type="text" id="address" placeholder="Detecting address..." />
+
+      <!-- Category -->
+      <select id="category" required>
+        <option value="">Select Category</option>
+        <option value="Streetlight">Street light</option>
+        <option value="Garbage">Garbage</option>
+        <option value="Pothole">Pothole</option>
+        <option value="Water Leakage">Water Leakage</option>
+      </select>
+
+      <!-- Description -->
+      <textarea id="description" rows="4" placeholder="Describe the issue..." required></textarea>
+
+      <!-- Anonymous -->
+      <label class="checkbox">
+        <input type="checkbox" id="anonymous" />
+        Report Anonymous
+      </label>
+
+      <!-- Submit -->
+      <button type="submit">Submit Issue</button>
+    </form>
+  </section>
+
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script>
+  // Initialize the Leaflet map
+  const map = L.map('map').setView([0, 0], 1); // Set initial view to a general area
+  let userMarker = null;
+
+    // Add a tile layer (the actual map image tiles)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Get user's geolocation and update the map
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+                const { latitude, longitude } = position.coords;
+                
+                // Center map on user's location
+                map.setView([latitude, longitude], 16);
+
+                // Add a marker for the user's location
+                if (userMarker) {
+                    map.removeLayer(userMarker);
+                }
+                userMarker = L.marker([latitude, longitude])
+                    .addTo(map)
+                    .bindPopup("📍 You are here!")
+                    .openPopup();
+                
+                // Fetch readable address using Nominatim API
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+                const data = await response.json();
+                document.getElementById("address").value = data.display_name;
+
+            },
+            (err) => {
+                console.warn("GPS access denied or unavailable.", err);
+                alert("Geolocation is not supported or was denied. Please enter your address manually.");
+                document.getElementById("address").value = "Location not available";
+            },
+            { enableHighAccuracy: true }
+        );
+    } else {
+        alert("Geolocation is not supported by your browser.");
+        document.getElementById("address").value = "Location not available";
+    }
+
+  
+
+  // Convert file(s) to Base64
+  function getBase64(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
+    });
+  }
+
+  // Form Submission
+  document.getElementById("issueForm").addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const files = document.getElementById("photo").files;
+    const photos = [];
+    const category = document.getElementById("category").value;
+
+
+    // Check if at least one image filename or type matches the category (normalize spaces and case)
+    let categoryMatch = false;
+    const normalizedCategory = category.replace(/\s/g, '').toLowerCase();
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const base64 = await getBase64(file);
+      photos.push(base64);
+      const normalizedFileName = file.name.replace(/\s/g, '').toLowerCase();
+      const normalizedFileType = file.type.replace(/\s/g, '').toLowerCase();
+      if (
+        normalizedFileName.includes(normalizedCategory) ||
+        normalizedFileType.includes(normalizedCategory)
+      ) {
+        categoryMatch = true;
+      }
+    }
+
+    // Check if description contains the category keyword (case-insensitive)
+    const description = document.getElementById("description").value;
+    let descriptionMatch = description.toLowerCase().includes(category.toLowerCase());
+
+    if (files.length > 0 && !categoryMatch) {
+      alert("Uploaded image(s) do not match the selected category. Please upload a relevant image.");
+      return;
+    }
+    // Get logged-in user's email (or 'anonymous' if not logged in)
+    let userEmail = "anonymous";
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    if (loggedInUser) {
+      try {
+        userEmail = JSON.parse(loggedInUser).email || "anonymous";
+      } catch {}
+    }
+    const report = {
+      id: Date.now(),
+      address: document.getElementById("address").value,
+      category: category,
+      description: document.getElementById("description").value,
+      anonymous: document.getElementById("anonymous").checked,
+      photos: photos,
+      timestamp: new Date().toISOString(),
+      email: userEmail,
+      approved: false // Pending government approval
+    };
+
+    let allReports = JSON.parse(localStorage.getItem("reports")) || [];
+    allReports.push(report);
+    localStorage.setItem("reports", JSON.stringify(allReports));
+
+    // Show animated, attractive success message
+    let successDiv = document.createElement('div');
+    successDiv.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center;">
+        <div style="font-size: 3.2rem; margin-bottom: 0.2em; animation: pop 0.5s;">✅</div>
+        <div style="font-size: 1.6rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 0.2em; background: linear-gradient(90deg, #6a5acd, #8ec5fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Issue Submitted!</div>
+        <div style="font-size: 1.1rem; color: #555; margin-bottom: 0.2em;">Thank you for helping your city!</div>
+        <div style="font-size: 1.1rem; color: #e67e22; margin-top: 0.5em; font-weight: 600;">Pending Government Approval</div>
+      </div>
+    `;
+    successDiv.style.position = 'fixed';
+    successDiv.style.top = '50%';
+    successDiv.style.left = '50%';
+    successDiv.style.transform = 'translate(-50%, -50%)';
+    successDiv.style.background = 'linear-gradient(120deg, #f8faff 60%, #e0e7ff 100%)';
+    successDiv.style.padding = '48px 64px 36px 64px';
+    successDiv.style.borderRadius = '22px';
+    successDiv.style.boxShadow = '0 8px 32px rgba(106,90,205,0.18)';
+    successDiv.style.fontSize = '1.5rem';
+    successDiv.style.fontWeight = 'bold';
+    successDiv.style.zIndex = '9999';
+    successDiv.style.borderTop = '6px solid #6a5acd';
+    successDiv.style.textAlign = 'center';
+    successDiv.style.animation = 'fadeInScale 0.5s';
+    document.body.appendChild(successDiv);
+    // Add keyframes for pop and fadeInScale
+    const styleSheet = document.createElement('style');
+    styleSheet.innerHTML = `
+      @keyframes pop { 0% { transform: scale(0.7); } 80% { transform: scale(1.15); } 100% { transform: scale(1); } }
+      @keyframes fadeInScale { 0% { opacity: 0; transform: scale(0.7) translate(-50%, -50%); } 100% { opacity: 1; transform: scale(1) translate(-50%, -50%); } }
+    `;
+    document.head.appendChild(styleSheet);
+    setTimeout(() => {
+      document.body.removeChild(successDiv);
+      document.head.removeChild(styleSheet);
+      window.location.href = "lastpage.html";
+    }, 1800);
+  });
+  if ("geolocation" in navigator) {
+  navigator.geolocation.getCurrentPosition(
+    (pos) => {
+      const { latitude, longitude } = pos.coords;
+      map.setView([latitude, longitude], 15);
+
+      if (userMarker) map.removeLayer(userMarker);
+
+      userMarker = L.marker([latitude, longitude])
+        .addTo(map)
+        .bindPopup("📍 You are here!")
+        .openPopup();
+    },
+    (err) => {
+      console.warn("GPS access denied or unavailable.", err);
+    },
+    { enableHighAccuracy: true }
+  );
+} else {
+  alert("Geolocation is not supported by your browser.");
+}
+
+</script>
+
+</body>
+</html>
