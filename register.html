@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CivicTrack - Register</title>
+    <style>
+      /* ===== Reset & Base Styling ===== */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", sans-serif;
+        background: linear-gradient(-45deg, #8ec5fc, #e0c3fc, #f093fb, #f5576c);
+        background-size: 400% 400%;
+        animation: gradientBG 12s ease infinite;
+        color: #333;
+        min-height: 100vh;
+      }
+
+      @keyframes gradientBG {
+        0% {background-position: 0% 50%;}
+        50% {background-position: 100% 50%;}
+        100% {background-position: 0% 50%;}
+      }
+
+      /* ===== Container & Header ===== */
+      .container {
+        max-width: 480px;
+        margin: 50px auto;
+        padding: 30px 30px 18px 30px;
+        background: #fff;
+        box-shadow: 0 8px 32px rgba(106,90,205,0.18), 0 1.5px 8px rgba(0,0,0,0.08);
+        border-radius: 18px;
+        position: relative;
+        transition: transform 0.25s cubic-bezier(.4,2,.6,1), box-shadow 0.25s;
+      }
+      .container:hover {
+        transform: translateY(-6px) scale(1.012);
+        box-shadow: 0 16px 40px rgba(106,90,205,0.22), 0 2px 12px rgba(0,0,0,0.10);
+      }
+      .logo-illustration {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 18px;
+      }
+      .logo-illustration img {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        box-shadow: 0 2px 12px rgba(30,136,229,0.12);
+        background: #e3f0ff;
+        object-fit: cover;
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .brand {
+        font-size: 1.5rem;
+        color: #1e88e5;
+        font-weight: 700;
+      }
+
+      .home-btn {
+        background: #1e88e5;
+        color: white;
+        padding: 8px 14px;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: 0.3s;
+      }
+
+      .home-btn:hover {
+        background-color: #1565c0;
+      }
+
+      /* ===== Form Box ===== */
+      .form-box {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .form-box h2 {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .form-box label {
+        font-weight: 500;
+        margin-bottom: 5px;
+      }
+
+      .input-group {
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .input-group input {
+        padding: 10px 14px 10px 38px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        font-size: 15px;
+        width: 100%;
+        transition: border-color 0.3s;
+      }
+      .input-group .input-icon {
+        position: absolute;
+        left: 10px;
+        font-size: 1.1rem;
+        color: #1e88e5;
+        opacity: 0.7;
+      }
+
+      .input-group input:focus {
+        border-color: #1e88e5;
+      }
+
+      /* ===== Register Button ===== */
+      .green-outline-btn {
+        padding: 12px;
+        font-size: 16px;
+        background-color: #1e88e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+      }
+
+      .green-outline-btn:hover {
+        background-color: #1565c0;
+      }
+
+      /* ===== Link Styling ===== */
+      .form-box p {
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .form-box a {
+        color: #1e88e5;
+        text-decoration: none;
+      }
+
+      .form-box a:hover {
+        text-decoration: underline;
+      }
+
+      /* ===== Responsive Design ===== */
+      @media screen and (max-width: 540px) {
+        .container {
+          margin: 20px;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <span class="brand">CivicTrack</span>
+        <a href="index.html" class="home-btn">Home</a>
+      </div>
+
+      <!-- Place civicus-logo.png in your project folder -->
+      <div class="logo-illustration">
+        <img src="civicus-logo.png" alt="CIVICUS Logo" style="width:110px; height:auto; border-radius:16px; background:#fff; box-shadow:0 2px 12px rgba(30,136,229,0.12); object-fit:contain;" />
+      </div>
+
+      <div class="form-box">
+        <h2>User Registration</h2>
+        <label>User Name</label>
+        <div class="input-group">
+          <span class="input-icon">👤</span>
+          <input type="text" id="regUsername" placeholder="Enter username" required />
+        </div>
+
+        <label>Email</label>
+        <div class="input-group">
+          <span class="input-icon">📧</span>
+          <input type="text" id="regEmail" placeholder="Email" required />
+        </div>
+
+        <label>Phone</label>
+        <div class="input-group">
+          <span class="input-icon">📱</span>
+          <input type="tel" id="regPhone" placeholder="Enter phone" required />
+        </div>
+
+        <label>Password</label>
+        <div class="input-group">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="regPassword" placeholder="Enter password" />
+        </div>
+
+        <p>Already have an account? <a href="login.html">Login</a></p>
+        <button class="green-outline-btn" id="registerBtn">Register</button>
+      </div>
+    </div>
+
+    <script>
+      document.getElementById("registerBtn").addEventListener("click", validateRegisterForm);
+
+      function validateRegisterForm(event) {
+        event.preventDefault();
+  const email = document.getElementById("regEmail").value.trim();
+  const password = document.getElementById("regPassword").value;
+  const phone = document.getElementById("regPhone").value.trim();
+        // Phone number must be exactly 10 digits
+        const phoneValid = /^\d{10}$/.test(phone);
+
+        if (!phoneValid) {
+          alert("Phone number must be exactly 10 digits.");
+          return false;
+        }
+
+  // Accept any email that ends with @gmail.com and has something before it
+  const emailValid = /^[^@\s]+@gmail\.com$/.test(email);
+        const passwordValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(password);
+
+        if (!emailValid) {
+          alert("Email must be in the form of 'something@gmail.com'");
+          return false;
+        }
+        if (!passwordValid) {
+          alert("Password must be at least 8 characters and include 1 uppercase, 1 lowercase, 1 special character, and 1 number.");
+          return false;
+        }
+
+        // Save user profile as an object in localStorage
+        const username = document.getElementById("regUsername").value.trim();
+        const userProfile = {
+          username: username,
+          email: email,
+          phone: phone,
+          password: password
+        };
+        localStorage.setItem("userProfile", JSON.stringify(userProfile));
+
+        // Show animated success message
+        const successDiv = document.createElement("div");
+        successDiv.style.position = "fixed";
+        successDiv.style.top = "50%";
+        successDiv.style.left = "50%";
+        successDiv.style.transform = "translate(-50%, -50%)";
+        successDiv.style.background = "#fff";
+        successDiv.style.padding = "36px 48px";
+        successDiv.style.borderRadius = "18px";
+        successDiv.style.boxShadow = "0 8px 32px rgba(30,136,229,0.18)";
+        successDiv.style.textAlign = "center";
+        successDiv.style.zIndex = 9999;
+        successDiv.innerHTML = `
+          <div style="font-size:2.5rem; animation: pop 0.7s cubic-bezier(.4,2,.6,1);">🎉</div>
+          <div style="font-size:1.3rem; font-weight:600; margin-top:10px;">Registration Successful!</div>
+        `;
+        document.body.appendChild(successDiv);
+        const styleSheet = document.createElement('style');
+        styleSheet.innerHTML = `@keyframes pop { 0% { transform: scale(0.7); } 80% { transform: scale(1.15); } 100% { transform: scale(1); } }`;
+        document.head.appendChild(styleSheet);
+        setTimeout(() => {
+          document.body.removeChild(successDiv);
+          document.head.removeChild(styleSheet);
+          window.location.href = "login.html";
+        }, 1400);
+        return true;
+      }
+    </script>
+  </body>
+</html>
