@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submission Successful - CivicTrack</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .card {
+      background: #fff;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 500px;
+      margin-top: 60px;
+    }
+    .icon {
+      font-size: 4rem;
+      color: #4caf50;
+      margin-bottom: 15px;
+    }
+    h1 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    p {
+      color: #555;
+      margin-bottom: 25px;
+    }
+    a {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #667eea;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 25px;
+      transition: background 0.3s;
+    }
+    a:hover {
+      background: #5563d6;
+    }
+    .problem-preview {
+      margin: 40px 0;
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 90%;
+      max-width: 700px;
+    }
+    .problem-preview h2 {
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .problem-preview img {
+      max-width: 180px;
+      border-radius: 8px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Success message -->
+  <div class="card">
+    <div class="icon">✅</div>
+    <h1>Submission Successful!</h1>
+    <p>Your report has been submitted successfully.  
+       Thank you for helping us improve our city.</p>
+    <a href="index.html">Go Back Home</a>
+  </div>
+
+  <!-- Submitted problem details -->
+  <div class="problem-preview" id="problemPreview">
+    <h2>📌 Submitted Problem</h2>
+    <div id="problemDetails"></div>
+  </div>
+
+  <script>
+    // Load reports from localStorage
+    const reports = JSON.parse(localStorage.getItem("reports")) || [];
+
+    if (reports.length > 0) {
+      const latest = reports[reports.length - 1]; // last submitted
+      const container = document.getElementById("problemDetails");
+
+      container.innerHTML = `
+        <p><strong>Problem:</strong> ${latest.category}</p>
+        <p><strong>Address:</strong> ${latest.address}</p>
+        <p><strong>Description:</strong> ${latest.description}</p>
+        <p><strong>Anonymous:</strong> ${latest.anonymous ? "Yes" : "No"}</p>
+        <p><strong>Time:</strong> ${latest.timestamp}</p>
+        <div>
+          ${latest.photos
+            .map((p) => `<img src="${p}" alt="Submitted image" />`)
+            .join("")}
+        </div>
+      `;
+    } else {
+      document.getElementById("problemPreview").innerHTML =
+        "<p>No problem data found.</p>";
+    }
+  </script>
+
+</body>
+
+</html>
